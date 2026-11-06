@@ -19,6 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Projetos WPF não incluem System.IO automaticamente -->
+    <Using Include="System.IO" />
     <Resource Include="SilverClean.ico" />
   </ItemGroup>
 
