@@ -7,6 +7,10 @@ on:
 jobs:
   build:
     runs-on: windows-2022
+    env:
+      # Segredos do repositório (Settings > Secrets and variables > Actions)
+      CERT_PFX_BASE64: ${{ secrets.CERT_PFX_BASE64 }}
+      CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -22,6 +26,31 @@ jobs:
           -p:IncludeNativeLibrariesForSelfExtract=true
           -p:EnableCompressionInSingleFile=true
           -o publish
+
+      - name: Assinar SilverClean.exe
+        if: env.CERT_PFX_BASE64 != ''
+        shell: pwsh
+        run: |
+          $pfx = Join-Path $env:RUNNER_TEMP "cert.pfx"
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:CERT_PFX_BASE64))
+
+          # signtool vem com o Windows SDK instalado no runner
+          $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" |
+                      Sort-Object FullName | Select-Object -Last 1
+          if (-not $signtool) { throw "signtool.exe não encontrado" }
+
+          & $signtool.FullName sign /f $pfx /p "$env:CERT_PASSWORD" /fd SHA256 `
+              /tr http://timestamp.digicert.com /td SHA256 /d "SilverClean" publish\SilverClean.exe
+          $code = $LASTEXITCODE
+          Remove-Item $pfx -Force
+          if ($code -ne 0) { throw "Falha ao assinar (código $code)" }
+
+          $sig = Get-AuthenticodeSignature publish\SilverClean.exe
+          Write-Host "Assinado por: $($sig.SignerCertificate.Subject)"
+
+      - name: Aviso (sem certificado)
+        if: env.CERT_PFX_BASE64 == ''
+        run: echo "::warning::Segredo CERT_PFX_BASE64 não configurado - o .exe foi gerado SEM assinatura."
 
       - uses: actions/upload-artifact@v4
         with:

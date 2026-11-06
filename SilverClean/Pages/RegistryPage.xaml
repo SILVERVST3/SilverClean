@@ -1,0 +1,92 @@
+<UserControl x:Class="SilverClean.Pages.RegistryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="14"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Categorias -->
+        <Border Style="{StaticResource Card}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="O que verificar" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                <Border DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="10" CornerRadius="4"
+                        Background="#FFF6E6" BorderBrush="#E3C27A" BorderThickness="1">
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#6B4E12"
+                               Text="Antes de corrigir, o SilverClean sempre salva um backup (.reg) de tudo o que for alterado. Use 'Restaurar backup' se algo deixar de funcionar."/>
+                </Border>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="CategoryList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,4">
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding CountText}" FontWeight="SemiBold"
+                                               Foreground="{StaticResource Accent}" Margin="6,0,0,0"/>
+                                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" ToolTip="{Binding Description}">
+                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+                                    </CheckBox>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- Resultado -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock x:Name="SummaryTitle" Style="{StaticResource H1}" Text="Verificação do Registro"/>
+                    <TextBlock x:Name="SummaryText" Style="{StaticResource Muted}" Margin="0,4,0,0"
+                               Text="Procura entradas que apontam para programas, arquivos e pastas que não existem mais. Clique em Verificar; nada é alterado sem sua confirmação."/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Row="1" Margin="0,10,0,6">
+                <ProgressBar x:Name="BusyBar" Visibility="Hidden"/>
+                <TextBlock x:Name="StatusText" Style="{StaticResource Muted}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+            </StackPanel>
+
+            <DataGrid x:Name="IssueGrid" Grid.Row="2">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="34" SortMemberPath="IsChecked">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Problema" Binding="{Binding Problem}" Width="260"/>
+                    <DataGridTextColumn Header="Dados" Binding="{Binding Data}" Width="*"/>
+                    <DataGridTextColumn Header="Chave do Registro" Binding="{Binding KeyText}" Width="*"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <DockPanel Grid.Row="3" Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Restaurar backup..." Click="Restore_Click" Margin="0"/>
+                    <Button Content="Marcar todos" Click="CheckAll_Click"/>
+                    <Button Content="Desmarcar" Click="UncheckAll_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="CancelBtn" Content="Cancelar" Click="Cancel_Click" IsEnabled="False"/>
+                    <Button x:Name="ScanBtn" Content="Verificar" Click="Scan_Click" MinWidth="120"/>
+                    <Button x:Name="FixBtn" Content="Corrigir selecionados" Click="Fix_Click" MinWidth="160"
+                            Style="{StaticResource PrimaryButton}" IsEnabled="False"/>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -20,6 +20,7 @@ namespace SilverClean
             PageClean.Visibility = NavClean.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
             PageStartup.Visibility = NavStartup.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
             PagePrograms.Visibility = NavPrograms.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+            PageRegistry.Visibility = NavRegistry.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
             PageDisk.Visibility = NavDisk.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
 
             if (NavStartup.IsChecked == true) PageStartup.EnsureLoaded();

@@ -36,6 +36,7 @@
                     <RadioButton x:Name="NavClean" Style="{StaticResource NavButton}" GroupName="nav" Content="🧹  Limpeza" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavStartup" Style="{StaticResource NavButton}" GroupName="nav" Content="🚀  Inicialização" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavPrograms" Style="{StaticResource NavButton}" GroupName="nav" Content="📦  Programas" Checked="Nav_Checked"/>
+                    <RadioButton x:Name="NavRegistry" Style="{StaticResource NavButton}" GroupName="nav" Content="🧩  Registro" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavDisk" Style="{StaticResource NavButton}" GroupName="nav" Content="💽  Análise de disco" Checked="Nav_Checked"/>
                 </StackPanel>
             </DockPanel>
@@ -46,6 +47,7 @@
             <pages:CleanerPage x:Name="PageClean"/>
             <pages:StartupPage x:Name="PageStartup" Visibility="Collapsed"/>
             <pages:ProgramsPage x:Name="PagePrograms" Visibility="Collapsed"/>
+            <pages:RegistryPage x:Name="PageRegistry" Visibility="Collapsed"/>
             <pages:DiskPage x:Name="PageDisk" Visibility="Collapsed"/>
         </Grid>
     </Grid>
